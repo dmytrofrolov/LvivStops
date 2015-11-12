@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+    
+   <TextView
+        android:id="@+id/tvIsConnected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"     
+        android:background="#FF0000"
+        android:textColor="#FFF"
+        android:textSize="18dp"
+        android:layout_marginBottom="5dp"
+        android:text="is connected? " />
+
+    <EditText
+        android:id="@+id/etResponse"
+        android:layout_width="match_parent"
+        android:layout_height="198dp"
+        android:ems="10"
+        android:layout_marginTop="10dp"
+        android:inputType="textMultiLine"
+        android:editable="false"
+        android:enabled="true"
+        android:layout_weight="0.99">
+
+        <requestFocus />
+    </EditText>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="185dp"
+        android:id="@+id/listView"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:choiceMode="singleChoice"
+        android:entries="@string/action_settings"
+        android:focusable="true" />
+
+</LinearLayout>
+<!-- From: file:/Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/res/layout/main.xml -->
