@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
     TextView etResponse;
 	TextView tvIsConnected;
 	ListView stopsList;
+	String[] catnames;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,13 @@ public class MainActivity extends Activity {
 		stopsList = (ListView) findViewById(R.id.listView);
 
 		// определяем массив типа String
-		final String[] catnames = new String[] {
-		"36610 - Русових, в центр",
-		"36401 - Щирецька, в АШАН",
-		"36860 - Конвеєрний, в центр",
-		"36477 - Кульпарків, в центр",
-		"36635 - Костел, в центр"
+		Bundle recdData = getIntent().getExtras();
+		String myVal = recdData.getString("stopstring");
+
+
+		catnames = new String[] {
+			"LET"+myVal,
+            "LAD"+myVal
 		};
 
 // используем адаптер данных
@@ -65,9 +67,13 @@ public class MainActivity extends Activity {
 									long id)
 			{
 				String item = (String) parent.getItemAtPosition(position);
-                String wayId = item.substring(0, 5);
-                //Toast.makeText(getBaseContext(), item + " selected" + wayId, Toast.LENGTH_LONG).show();
-                new HttpAsyncTask().execute("http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/stops/"+wayId);
+                String wayId = "";
+				String wayType = item.substring(0, 3);
+				String loadUrl = "";
+                wayId = item.substring(3, 7);
+                loadUrl = "http://82.207.107.126:13541/SimpleRIDE/"+wayType+"/SM.WebApi/api/stops?code="+wayId;
+                Log.d("LoadURL : ", loadUrl);
+                new HttpAsyncTask().execute(loadUrl);
 			}
 		});
 
@@ -159,29 +165,12 @@ public class MainActivity extends Activity {
         receivedStr = receivedStr.replace("]\"", "]");
         receivedStr = receivedStr.replace("\\\\\\\"", "*");
         receivedStr = receivedStr.replace("\\", "");
-//        receivedStr = receivedStr.replace("\"Angle\":", "\"Angle\":\"");
-//        receivedStr = receivedStr.replace(",\"EndPoint\":", "\",\"EndPoint\":");
-//        receivedStr = receivedStr.replace("\"RouteId\":", "\"RouteId\":\"");
-//        receivedStr = receivedStr.replace(",\"RouteName\"", "\",\"RouteName\"");
-//        receivedStr = receivedStr.replace("\"State\":", "\"State\":\"");
-//        receivedStr = receivedStr.replace(",\"TimeToPoint\":", "\",\"TimeToPoint\":\"");
-//        receivedStr = receivedStr.replace(",\"VehicleId\":", "\",\"VehicleId\":\"");
-//        receivedStr = receivedStr.replace(",\"VehicleName\"", "\",\"VehicleName\"");
-//        receivedStr = receivedStr.replace("\"X\":", "\"X\":\"");
-//        receivedStr = receivedStr.replace(",\"Y\":", "\",\"Y\":\"");
-//        receivedStr = receivedStr.replace("}", "\"}");
-        //receivedStr = "" + receivedStr + "";
-        //List<String> allNames = new ArrayList<String>();
 
         try
         {
-            //JSONObject jObject = new JSONObject(receivedStr);
             JSONArray cast = new JSONArray(receivedStr);
             for (int i=0; i<cast.length(); i++) {
                 JSONObject jObject = cast.getJSONObject(i);
-                //String name = actor.getString("TimeToPoint");
-                //allNames.add(name);
-                //result += name + "_";
                 result += jObject.getString("RouteName").replace("ЛАД А", "")+ "_";
                 result += "("+String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint"))/60)+" хв)_";
                 result += jObject.getString("VehicleName");
@@ -192,27 +181,6 @@ public class MainActivity extends Activity {
 
         }
 
-//        receivedStr = receivedStr.replace("\"[{", "");
-//        receivedStr = receivedStr.replace("}]\"", "");
-//        receivedStr = receivedStr.replace("\\", "");
-//        receivedStr = receivedStr.replace("},{", "::");
-//        String[] separated = receivedStr.split("::");
-//
-//        try {
-//            JSONObject jObject;
-//            for (String bus : separated) {
-//                bus = "{"+bus.trim()+"}";
-//                jObject = new JSONObject(bus);
-//                //result += jObject.getString("RouteId");
-//                result += jObject.getString("RouteName").replace("ЛАД А", "")+ "_";
-//                result += "("+String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint"))/60)+" хв)_";
-//                result += jObject.getString("VehicleName");
-//                result += "\n\n";
-//            }
-//
-//        } catch (JSONException e) {
-//            // Oops
-//        }
         return result+receivedStr;
     }
 
