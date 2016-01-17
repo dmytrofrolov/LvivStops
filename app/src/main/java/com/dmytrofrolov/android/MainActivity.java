@@ -19,7 +19,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
 //    TextView etResponse;
 	TextView tvIsConnected;
@@ -42,6 +46,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 		
 		// get reference to the views
 //		etResponse = (TextView) findViewById(R.id.etResponse);
@@ -109,6 +116,14 @@ public class MainActivity extends Activity {
         new HttpAsyncTask().execute(loadUrl);
 
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main , menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
 
 	public static String GET(String url){
 		InputStream inputStream = null;

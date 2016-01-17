@@ -9,6 +9,8 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -43,7 +46,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends AppCompatActivity {
 
     ListView stopsList;
     String[] catnames;
@@ -55,6 +58,12 @@ public class SearchActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+        findViewById(R.id.loading).setVisibility(View.VISIBLE);
+
         String loadUrl = "http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/stops/";
         Log.d("LoadURL : ", loadUrl);
         catnames = new String[] {
@@ -78,27 +87,14 @@ public class SearchActivity extends Activity {
             }
         });
 
-//        final Button button = (Button) findViewById(R.id.button);
-//
-//        button.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View parent) {
-//                Intent appInfo = new Intent(SearchActivity.this, MainActivity.class);
-//                EditText editText1 = (EditText) findViewById(R.id.editText);
-//                appInfo.putExtra("stopstring", editText1.getText().toString());
-//                startActivity(appInfo);
-//
-//                ArrayList<String> stringArrayList = new ArrayList<String>();
-//
-//                stringArrayList.add(editText1.getText().toString());
-//                for (String item: catnames) {
-//                    stringArrayList.add(item);
-//                }
-//                catnames = stringArrayList.toArray(new String[stringArrayList.size()]);
-//
-//
-//                writeToFile(SearchActivity.this);
-//            }
-//        });
+        final Button button = (Button) findViewById(R.id.clear_search);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View parent) {
+                EditText textEdit = (EditText) findViewById(R.id.editText);
+                textEdit.setText("");
+            }
+        });
 
 
         EditText textEdit = (EditText) findViewById(R.id.editText);
@@ -108,6 +104,8 @@ public class SearchActivity extends Activity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(stopItemArrayList==null)return;
+
                 int textlength = s.toString().length();
                 array_sort.clear();
                 for (int i = 0; i < stopItemArrayList.size(); i++)
@@ -121,7 +119,8 @@ public class SearchActivity extends Activity {
                     }
                 }
 
-                stopsList.setAdapter(new StopAdapter(SearchActivity.this, array_sort));
+                if(stopItemArrayList.size()>0)
+                    stopsList.setAdapter(new StopAdapter(SearchActivity.this, array_sort));
             }
         });
 

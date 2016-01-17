@@ -17,4 +17,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="Widget.MyApp.ActionBar" parent="AppTheme">
+        <item name="android:background">#fff</item>
+    </style>
+
 </resources>
