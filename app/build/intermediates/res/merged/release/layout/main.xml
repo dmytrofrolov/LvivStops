@@ -16,20 +16,6 @@
         android:layout_marginBottom="5dp"
         android:text="is connected? " />
 
-    <EditText
-        android:id="@+id/etResponse"
-        android:layout_width="match_parent"
-        android:layout_height="198dp"
-        android:ems="10"
-        android:layout_marginTop="10dp"
-        android:inputType="textMultiLine"
-        android:editable="false"
-        android:enabled="true"
-        android:layout_weight="0.99">
-
-        <requestFocus />
-    </EditText>
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,8 +23,26 @@
         android:layout_gravity="center_horizontal"
         android:clickable="true"
         android:choiceMode="singleChoice"
-        android:entries="@string/action_settings"
-        android:focusable="true" />
+        android:focusable="true"
+        />
+
+    <RelativeLayout
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listViewScedule"
+        android:clickable="false" />
 
 </LinearLayout>
 <!-- From: file:/Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/res/layout/main.xml -->

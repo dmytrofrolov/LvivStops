@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -45,8 +47,9 @@ public class SearchActivity extends Activity {
 
     ListView stopsList;
     String[] catnames;
+    ArrayList<StopItem> stopItemArrayList;
 
-    private ArrayList<String> array_sort = new ArrayList<String>();
+    private ArrayList<StopItem> array_sort = new ArrayList<StopItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,32 +72,33 @@ public class SearchActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
                 Intent appInfo = new Intent(SearchActivity.this, MainActivity.class);
-                appInfo.putExtra("stopstring", (String) parent.getItemAtPosition(position));
+                StopItem temp = (StopItem) parent.getItemAtPosition(position);
+                appInfo.putExtra("stopstring", temp.getDescription() + temp.getTitle());
                 startActivity(appInfo);
             }
         });
 
-        final Button button = (Button) findViewById(R.id.button);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View parent) {
-                Intent appInfo = new Intent(SearchActivity.this, MainActivity.class);
-                EditText editText1 = (EditText) findViewById(R.id.editText);
-                appInfo.putExtra("stopstring", editText1.getText().toString());
-                startActivity(appInfo);
-
-                ArrayList<String> stringArrayList = new ArrayList<String>();
-
-                stringArrayList.add(editText1.getText().toString());
-                for (String item: catnames) {
-                    stringArrayList.add(item);
-                }
-                catnames = stringArrayList.toArray(new String[stringArrayList.size()]);
-
-
-                writeToFile(SearchActivity.this);
-            }
-        });
+//        final Button button = (Button) findViewById(R.id.button);
+//
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View parent) {
+//                Intent appInfo = new Intent(SearchActivity.this, MainActivity.class);
+//                EditText editText1 = (EditText) findViewById(R.id.editText);
+//                appInfo.putExtra("stopstring", editText1.getText().toString());
+//                startActivity(appInfo);
+//
+//                ArrayList<String> stringArrayList = new ArrayList<String>();
+//
+//                stringArrayList.add(editText1.getText().toString());
+//                for (String item: catnames) {
+//                    stringArrayList.add(item);
+//                }
+//                catnames = stringArrayList.toArray(new String[stringArrayList.size()]);
+//
+//
+//                writeToFile(SearchActivity.this);
+//            }
+//        });
 
 
         EditText textEdit = (EditText) findViewById(R.id.editText);
@@ -106,18 +110,18 @@ public class SearchActivity extends Activity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int textlength = s.toString().length();
                 array_sort.clear();
-                for (int i = 0; i < catnames.length; i++)
+                for (int i = 0; i < stopItemArrayList.size(); i++)
                 {
-                    if (textlength <= catnames[i].length())
+                    if (textlength <= stopItemArrayList.get(i).getTitle().length())
                     {
-                        if(catnames[i].toString().toLowerCase().contains(s.toString().toLowerCase()))
+                        if(stopItemArrayList.get(i).getTitle().toString().toLowerCase().contains(s.toString().toLowerCase()))
                         {
-                            array_sort.add(catnames[i]);
+                            array_sort.add(stopItemArrayList.get(i));
                         }
                     }
                 }
 
-                stopsList.setAdapter(new ArrayAdapter<String>(SearchActivity.this,android.R.layout.simple_list_item_1, array_sort));
+                stopsList.setAdapter(new StopAdapter(SearchActivity.this, array_sort));
             }
         });
 
@@ -125,6 +129,14 @@ public class SearchActivity extends Activity {
 
         new HttpAsyncTask().execute(loadUrl);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main , menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -216,8 +228,11 @@ public class SearchActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
-            catnames = parseJsonToStr(result);
-            stopsList.setAdapter(new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1, catnames));
+//            catnames = parseJsonToStr(result);
+//            stopsList.setAdapter(new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1, catnames));
+            findViewById(R.id.loading).setVisibility(View.GONE);
+            stopItemArrayList = parseJsonToStopAdapter(result);
+            stopsList.setAdapter(new StopAdapter(SearchActivity.this, stopItemArrayList));
         }
     }
 
@@ -249,6 +264,36 @@ public class SearchActivity extends Activity {
         }
 
         return result.toArray(new String[result.size()]);
+    }
+
+    public ArrayList<StopItem> parseJsonToStopAdapter(String receivedStr){
+//        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<StopItem> items = new ArrayList<StopItem>();
+
+        receivedStr = receivedStr.replace("\"[", "[");
+        receivedStr = receivedStr.replace("]\"", "]");
+        receivedStr = receivedStr.replace("\\\\\\\"", "*");
+        receivedStr = receivedStr.replace("\\", "");
+        try
+        {
+            //JSONObject jObject = new JSONObject(receivedStr);
+            JSONArray cast = new JSONArray(receivedStr);
+            for (int i=0; i<cast.length(); i++) {
+                JSONObject jObject = cast.getJSONObject(i);
+                String itemRes = "";
+                itemRes += jObject.getString("Code")+ "_";
+
+                if(itemRes.length()>5)continue;
+                items.add(new StopItem(jObject.getString("Name"), itemRes));
+//                itemRes += jObject.getString("Name");
+//                result.add(itemRes);
+            }
+        }catch (JSONException e)
+        {
+            //
+        }
+
+        return items;
     }
 
 }
