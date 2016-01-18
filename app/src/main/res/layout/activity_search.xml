@@ -74,11 +74,18 @@
                 android:layout_gravity="center" />
         </RelativeLayout>
 
-        <ListView
+        <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView2"
-            />
+            android:layout_height="fill_parent"
+            android:id="@+id/swipe_to_refresh"
+            >
+            <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView2"
+                />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
 
     </LinearLayout>
 

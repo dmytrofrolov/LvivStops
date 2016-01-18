@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -52,6 +53,7 @@ public class SearchActivity extends AppCompatActivity {
     ListView stopsList;
     String[] catnames;
     ArrayList<StopItem> stopItemArrayList;
+    String loadUrl = "http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/stops/";
 
     private ArrayList<StopItem> array_sort = new ArrayList<StopItem>();
 
@@ -62,10 +64,21 @@ public class SearchActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        setTitle("Пошук за зупинками");
 
         findViewById(R.id.loading).setVisibility(View.VISIBLE);
 
-        String loadUrl = "http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/stops/";
+
         Log.d("LoadURL : ", loadUrl);
         catnames = new String[] {
                 "0557 - Русових, в центр",
@@ -102,27 +115,35 @@ public class SearchActivity extends AppCompatActivity {
         EditText textEdit = (EditText) findViewById(R.id.editText);
 
         textEdit.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {}
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(stopItemArrayList==null)return;
+                if (stopItemArrayList == null) return;
 
                 int textlength = s.toString().length();
                 array_sort.clear();
-                for (int i = 0; i < stopItemArrayList.size(); i++)
-                {
-                    if (textlength <= stopItemArrayList.get(i).getTitle().length())
-                    {
-                        if(stopItemArrayList.get(i).getTitle().toString().toLowerCase().contains(s.toString().toLowerCase()))
-                        {
+                for (int i = 0; i < stopItemArrayList.size(); i++) {
+                    if (textlength <= stopItemArrayList.get(i).getTitle().length()) {
+                        if (stopItemArrayList.get(i).getTitle().toString().toLowerCase().contains(s.toString().toLowerCase())) {
                             array_sort.add(stopItemArrayList.get(i));
                         }
                     }
                 }
 
-                if(stopItemArrayList.size()>0)
+                if (stopItemArrayList.size() > 0)
                     stopsList.setAdapter(new StopAdapter(SearchActivity.this, array_sort));
+            }
+        });
+
+        SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
+        sw.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new HttpAsyncTask().execute(loadUrl);
             }
         });
 
@@ -251,12 +272,14 @@ public class SearchActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Отримано!", Toast.LENGTH_LONG).show();
 //            catnames = parseJsonToStr(result);
 //            stopsList.setAdapter(new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1, catnames));
             findViewById(R.id.loading).setVisibility(View.GONE);
             stopItemArrayList = parseJsonToStopAdapter(result);
             stopsList.setAdapter(new StopAdapter(SearchActivity.this, stopItemArrayList));
+            SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
+            sw.setRefreshing(false);
         }
     }
 

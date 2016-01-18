@@ -26,14 +26,18 @@ import android.widget.Toast;
 public class StopAdapter extends ArrayAdapter<StopItem> {
     private final Context context;
     private final ArrayList<StopItem> itemsArrayList;
+    private boolean isShowButton;
 
     public StopAdapter(Context context, ArrayList<StopItem> itemsArrayList) {
 
         super(context, R.layout.stop_row, itemsArrayList);
 
+        this.isShowButton = true;
         this.context = context;
         this.itemsArrayList = itemsArrayList;
     }
+
+    public void setIsShowButton(boolean isShowButton){this.isShowButton=isShowButton;}
 
     @Override
     public View getView(int position, View convertView, final ViewGroup parent) {
@@ -60,42 +64,43 @@ public class StopAdapter extends ArrayAdapter<StopItem> {
                 //do something
                 // SearchActivity::writeToFile(this, [itemsArrayList.get(position).getDescription()+itemsArrayList.get(position).getTitle()]);
                 FileInputStream stream = null;
-                String [] readBack = {};
+                String[] readBack = {};
                 try {
-                    stream = new FileInputStream (new File(Environment.getExternalStorageDirectory().getPath() + "/LvivRoutes.txt"));
+                    stream = new FileInputStream(new File(Environment.getExternalStorageDirectory().getPath() + "/LvivRoutes.txt"));
                     ObjectInputStream din = new ObjectInputStream(stream);
                     try {
                         readBack = (String[]) din.readObject();
-                    }catch (ClassNotFoundException e){}
+                    } catch (ClassNotFoundException e) {
+                    }
 
                     stream.close();
-                }catch (IOException e) {
+                } catch (IOException e) {
 
                 }
 
 //                stringArrayList.add(0, itemsArrayList.get(position).getDescription()+itemsArrayList.get(position).getTitle());
 //                readBack
 
-                LinearLayout rl = (LinearLayout)v.getParent();
-                TextView tv = (TextView)rl.findViewById(R.id.value);
-                TextView tv2 = (TextView)rl.findViewById(R.id.label);
-                String text = tv.getText().toString()+tv2.getText().toString();
+                LinearLayout rl = (LinearLayout) v.getParent();
+                TextView tv = (TextView) rl.findViewById(R.id.value);
+                TextView tv2 = (TextView) rl.findViewById(R.id.label);
+                String text = tv.getText().toString() + tv2.getText().toString();
                 boolean isFound = false;
                 int foundIndex = 0;
 
                 ArrayList<String> stringArrayList = new ArrayList<String>();
-                for (int i = 0; i < readBack.length; i++){
+                for (int i = 0; i < readBack.length; i++) {
                     stringArrayList.add(readBack[i]);
-                    if(readBack[i].contains(text)){
-                        isFound=true;
+                    if (readBack[i].contains(text)) {
+                        isFound = true;
                         foundIndex = i;
                     }
                 }
 
-                if(isFound==false) {
+                if (isFound == false) {
                     stringArrayList.add(0, text);
                     Toast.makeText(getContext(), "Додано успішно!", Toast.LENGTH_LONG).show();
-                }else{
+                } else {
                     stringArrayList.remove(foundIndex);
                     Toast.makeText(getContext(), "Видалено успішно!", Toast.LENGTH_LONG).show();
                 }
@@ -110,14 +115,18 @@ public class StopAdapter extends ArrayAdapter<StopItem> {
                     dout.flush();
                     stream2.getFD().sync();
                     stream2.close();
-                }
-                catch (IOException e){
+                } catch (IOException e) {
 
                 }
-                Log.d("StarOnClick", "Clicked"+text);
+                Log.d("StarOnClick", "Clicked" + text);
             }
         });
         addBtn.setFocusable(false);
+
+        if( isShowButton == false ){
+            addBtn.setEnabled(false);
+            addBtn.setVisibility(View.INVISIBLE);
+        }
 
         // 5. retrn rowView
         return rowView;

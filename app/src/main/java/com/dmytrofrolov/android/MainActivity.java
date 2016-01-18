@@ -19,6 +19,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 	ListView stopsList;
 	ListView listViewScedule;
 	String[] catnames;
+    String loadUrl = "";
 
     ArrayList<StopItem> sceduleItemArrayList;
 
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 String code = stopItem.getCode();
                 String wayId = "";
                 String wayType = code.substring(0, 3);
-                String loadUrl = "";
+
                 wayId = code.substring(3, 7);
                 loadUrl = "http://82.207.107.126:13541/SimpleRIDE/" + wayType + "/SM.WebApi/api/stops?code=" + wayId;
                 Log.d("LoadURL : ", loadUrl);
@@ -122,9 +124,17 @@ public class MainActivity extends AppCompatActivity {
 			
 		// show response on the EditText etResponse 
 		//etResponse.setText(GET("http://hmkcode.com/examples/index.php"));
-		
+
+        SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
+        sw.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new HttpAsyncTask().execute(loadUrl);
+            }
+        });
+
 		// call AsynTask to perform network operation on separate thread
-        String loadUrl = "http://82.207.107.126:13541/SimpleRIDE/"+"LAD"+"/SM.WebApi/api/stops?code="+myVal.substring(0, 4);
+        loadUrl = "http://82.207.107.126:13541/SimpleRIDE/"+"LAD"+"/SM.WebApi/api/stops?code="+myVal.substring(0, 4);
         findViewById(R.id.loading).setVisibility(View.VISIBLE);
         Log.d("LoadURL onStart : ", loadUrl);
         new HttpAsyncTask().execute(loadUrl);
@@ -133,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main , menu);
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main , menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -195,10 +205,12 @@ public class MainActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-        	Toast.makeText(getBaseContext(), "Received!", Toast.LENGTH_LONG).show();
+        	Toast.makeText(getBaseContext(), "Отримано!", Toast.LENGTH_LONG).show();
             findViewById(R.id.loading).setVisibility(View.GONE);
             listViewScedule.setAdapter(new SceduleAdapter(MainActivity.this, parseJsonToSceduleAdapter(result)));
 
+            SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
+            sw.setRefreshing(false);
 //            result = parseJsonToStr(result);
 //            etResponse.setText(result);
 

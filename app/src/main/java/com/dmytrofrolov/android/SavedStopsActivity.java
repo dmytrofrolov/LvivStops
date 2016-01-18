@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -135,6 +136,22 @@ public class SavedStopsActivity extends AppCompatActivity {
 
                 if (stopItemArrayList.size() > 0)
                     stopsList.setAdapter(new StopAdapter(SavedStopsActivity.this, array_sort));
+            }
+        });
+
+        SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
+        sw.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                catnames = readFromFile(SavedStopsActivity.this);
+                stopItemArrayList.clear();
+                for (String str:catnames
+                        ) {
+                    stopItemArrayList.add(new StopItem(str.substring(5),str.substring(0,5)));
+                }
+                stopsList.setAdapter(new StopAdapter(SavedStopsActivity.this, stopItemArrayList));
+                SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
+                sw.setRefreshing(false);
             }
         });
 
