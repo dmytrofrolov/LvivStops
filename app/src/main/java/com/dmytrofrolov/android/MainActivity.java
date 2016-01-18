@@ -49,7 +49,17 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-		
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+
 		// get reference to the views
 //		etResponse = (TextView) findViewById(R.id.etResponse);
 //        etResponse.setFocusable(false);
@@ -66,28 +76,32 @@ public class MainActivity extends AppCompatActivity {
             myVal = recdData.getString("stopstring");
 
 
-		catnames = new String[] {
+
+        catnames = new String[] {
 			"LET"+myVal,
             "LAD"+myVal
 		};
-        ArrayList<StopItem> transportTypeArrayList = new ArrayList<StopItem>();;
-        transportTypeArrayList.add(new StopItem(catnames[0].substring(8), catnames[0].substring(0,8)));
-        transportTypeArrayList.add(new StopItem(catnames[1].substring(8), catnames[1].substring(0,8)));
+
+        setTitle(catnames[0].substring(8));
+
+        ArrayList<TransportItem> transportTypeArrayList = new ArrayList<TransportItem>();;
+        transportTypeArrayList.add(new TransportItem("Електротранспорт", catnames[0].substring(0,8)));
+        transportTypeArrayList.add(new TransportItem("Автобуси", catnames[1].substring(0,8)));
 
 // используем адаптер данных
 //		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, catnames);
-        stopsList.setAdapter(new StopAdapter(MainActivity.this, transportTypeArrayList));
+        stopsList.setAdapter(new TransportRowAdapter(MainActivity.this, transportTypeArrayList));
 
         stopsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
                                     long id) {
-                StopItem stopItem = (StopItem) parent.getItemAtPosition(position);
-                String item = stopItem.getDescription()+stopItem.getTitle();
+                TransportItem stopItem = (TransportItem) parent.getItemAtPosition(position);
+                String code = stopItem.getCode();
                 String wayId = "";
-                String wayType = item.substring(0, 3);
+                String wayType = code.substring(0, 3);
                 String loadUrl = "";
-                wayId = item.substring(3, 7);
+                wayId = code.substring(3, 7);
                 loadUrl = "http://82.207.107.126:13541/SimpleRIDE/" + wayType + "/SM.WebApi/api/stops?code=" + wayId;
                 Log.d("LoadURL : ", loadUrl);
                 findViewById(R.id.loading).setVisibility(View.VISIBLE);

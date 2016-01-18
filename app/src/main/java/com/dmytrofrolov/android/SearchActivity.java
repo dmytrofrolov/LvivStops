@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -76,6 +77,7 @@ public class SearchActivity extends AppCompatActivity {
         catnames = readFromFile(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, catnames);
         stopsList = (ListView) findViewById(R.id.listView2);
+        stopsList.setItemsCanFocus(true);
 
         stopsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -138,16 +140,39 @@ public class SearchActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.saved_stops:
+                Intent appInfo = new Intent(SearchActivity.this, SavedStopsActivity.class);
+                startActivity(appInfo);
+                return true;
+            case R.id.about_program:
+
+                return true;
+
+            case R.id.send_feedback:
+                return true;
+
+            case R.id.exit:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     // save / read file
-    public void writeToFile(Context ctx){
+    public static void writeToFile(Context ctx, String[] list){
         FileOutputStream stream = null;
 
         try {
     /* you should declare private and final FILENAME_CITY */
             stream = new FileOutputStream (new File(Environment.getExternalStorageDirectory().getPath() + "/LvivRoutes.txt"));
             ObjectOutputStream dout = new ObjectOutputStream(stream);
-            dout.writeObject(catnames);
+            dout.writeObject(list);
 
             dout.flush();
             stream.getFD().sync();
@@ -158,7 +183,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    public String [] readFromFile(Context ctx){
+    public static String [] readFromFile(Context ctx){
         FileInputStream stream = null;
         String [] readBack = {};
         try {
