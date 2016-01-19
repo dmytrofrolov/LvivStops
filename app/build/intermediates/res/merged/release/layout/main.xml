@@ -13,17 +13,19 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-   <TextView
-        android:id="@+id/tvIsConnected"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="#FF0000"
-        android:textColor="#FFF"
-        android:textSize="10dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginTop="1dp"
-        android:text="is connected? " />
+   <!--<TextView-->
+        <!--android:id="@+id/tvIsConnected"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:background="#FF0000"-->
+        <!--android:textColor="#FFF"-->
+        <!--android:textSize="10dp"-->
+        <!--android:layout_marginBottom="1dp"-->
+        <!--android:layout_marginTop="1dp"-->
+        <!--android:text="is connected? "-->
+        <!--android:visibility="invisible"-->
+       <!--/>-->
 
     <ListView
         android:layout_width="match_parent"
@@ -33,7 +35,7 @@
         android:clickable="true"
         android:choiceMode="singleChoice"
         android:focusable="true"
-        android:background="#c6fcec" />
+        android:background="#fefdef" />
 
     <RelativeLayout
         android:id="@+id/loading"

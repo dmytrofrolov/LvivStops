@@ -2,6 +2,7 @@ package com.dmytrofrolov.android;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -11,8 +12,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -46,7 +49,10 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class MainScreenActivity extends AppCompatActivity {
@@ -59,7 +65,7 @@ public class MainScreenActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        setTitle("Львів. Транспорт онлайн.");
+        setTitle("Львівський транспорт. Онлайн.");
 
         // Search by stop button
         Button search_by_stop_button = (Button) findViewById(R.id.search_by_stops);
@@ -102,6 +108,22 @@ public class MainScreenActivity extends AppCompatActivity {
         });
 
 
+        if(!isConnected()){
+            new AlertDialog.Builder(MainScreenActivity.this)
+                    .setTitle("Проблемс(")
+                    .setMessage("Інформації немає, спробуйте вибрати щось інше. \nА також перевірте наявність інтернету.")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+
+        String query="";
+        try{query = URLEncoder.encode(getDeviceName(), "utf-8");}catch (UnsupportedEncodingException e){}
+        new HttpAsyncTask().execute("http://lvivtransport.udesgo.com/save.php?model="+query);
 
     }
 
@@ -136,13 +158,26 @@ public class MainScreenActivity extends AppCompatActivity {
         }
     }
 
+
+    // device numbers
     public String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
+
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String deviceId = deviceUuid.toString();
+
         if (model.startsWith(manufacturer)) {
-            return capitalize(model);
+            return capitalize(model)+ " "+deviceId;
         } else {
-            return capitalize(manufacturer) + " " + model;
+            return capitalize(manufacturer) + " " + model + " "+deviceId;
         }
     }
 
@@ -157,6 +192,16 @@ public class MainScreenActivity extends AppCompatActivity {
         } else {
             return Character.toUpperCase(first) + s.substring(1);
         }
+    }
+
+    // check connection
+    public boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
     }
 
 
@@ -207,7 +252,7 @@ public class MainScreenActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            
+//            Log.d("onPostExecute ", result);
         }
     }
 

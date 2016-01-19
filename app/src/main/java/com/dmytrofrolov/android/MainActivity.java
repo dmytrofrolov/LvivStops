@@ -15,11 +15,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         listViewScedule = (ListView) findViewById(R.id.listViewScedule);
         listViewScedule.setClickable(false);
 
-		tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
+//		tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
 		stopsList = (ListView) findViewById(R.id.listView);
 
 		// определяем массив типа String
@@ -113,14 +115,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-		// check if you are connected or not
-		if(isConnected()){
-			tvIsConnected.setBackgroundColor(0xFF00CC00);
-			tvIsConnected.setText("You are connected");
+//		// check if you are connected or not
+		if(!isConnected()){
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Проблемс(")
+                    .setMessage("Інформації немає, спробуйте вибрати щось інше. \nА також перевірте наявність інтернету.")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
-		else{
-			tvIsConnected.setText("You are NOT connected");
-		}
+//			tvIsConnected.setBackgroundColor(0xFF00CC00);
+//			tvIsConnected.setText("You are connected");
+//        }
+//		else{
+//			tvIsConnected.setText("You are NOT connected");
+//		}
 			
 		// show response on the EditText etResponse 
 		//etResponse.setText(GET("http://hmkcode.com/examples/index.php"));
@@ -207,10 +220,12 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
         	Toast.makeText(getBaseContext(), "Отримано!", Toast.LENGTH_LONG).show();
             findViewById(R.id.loading).setVisibility(View.GONE);
-            listViewScedule.setAdapter(new SceduleAdapter(MainActivity.this, parseJsonToSceduleAdapter(result)));
+            ArrayList<SceduleItem> ad = parseJsonToSceduleAdapter(result);
+            listViewScedule.setAdapter(new SceduleAdapter(MainActivity.this, ad));
 
             SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
             sw.setRefreshing(false);
+
 //            result = parseJsonToStr(result);
 //            etResponse.setText(result);
 
