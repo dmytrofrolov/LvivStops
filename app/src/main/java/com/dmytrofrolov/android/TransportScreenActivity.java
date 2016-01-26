@@ -110,6 +110,7 @@ public class TransportScreenActivity extends AppCompatActivity {
         EditText textEdit = (EditText) findViewById(R.id.editText);
 
         textEdit.setHint("Фільтр маршрутів");
+
         textEdit.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
             }

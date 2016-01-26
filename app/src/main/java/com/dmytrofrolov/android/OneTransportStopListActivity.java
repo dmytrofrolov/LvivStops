@@ -56,6 +56,7 @@ public class OneTransportStopListActivity extends AppCompatActivity {
     String[] catnames;
     ArrayList<StopItem> stopItemArrayList;
     String loadUrl = "";
+    String wayTitleString = "";
 
     private ArrayList<StopItem> array_sort = new ArrayList<StopItem>();
 
@@ -76,7 +77,8 @@ public class OneTransportStopListActivity extends AppCompatActivity {
         });
 
         Bundle recdData = getIntent().getExtras();
-        setTitle(recdData.getString("title"));
+        wayTitleString = recdData.getString("title");
+        setTitle(wayTitleString);
         loadUrl = recdData.getString("loadurl");
         loadUrl = loadUrl.replace("|","%7C");
 
@@ -96,6 +98,7 @@ public class OneTransportStopListActivity extends AppCompatActivity {
                 Intent appInfo = new Intent(OneTransportStopListActivity.this, MainActivity.class);
                 StopItem temp = (StopItem) parent.getItemAtPosition(position);
                 appInfo.putExtra("stopstring", temp.getDescription() + temp.getTitle());
+                appInfo.putExtra("waytitle", wayTitleString);
                 startActivity(appInfo);
             }
         });
@@ -275,7 +278,7 @@ public class OneTransportStopListActivity extends AppCompatActivity {
 //            stopsList.setAdapter(new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1, catnames));
             findViewById(R.id.loading).setVisibility(View.GONE);
             stopItemArrayList = parseJsonToStopAdapter(result);
-            Log.d("GETW",String.valueOf(result.length()));
+            Log.d("GETW", String.valueOf(result.length()));
             stopsList.setAdapter(new StopAdapter(OneTransportStopListActivity.this, stopItemArrayList));
             SwipeRefreshLayout sw = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh);
             sw.setRefreshing(false);

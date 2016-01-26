@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 	ListView listViewScedule;
 	String[] catnames;
     String loadUrl = "";
+    String wayTitleForFilter = "";
 
     ArrayList<StopItem> sceduleItemArrayList;
 
@@ -76,8 +77,12 @@ public class MainActivity extends AppCompatActivity {
 		// определяем массив типа String
 		Bundle recdData = getIntent().getExtras();
         String myVal = "0000_ ";
-        if (recdData!=null)
+        if (recdData!=null){
             myVal = recdData.getString("stopstring");
+            if(myVal==null)myVal="";
+            wayTitleForFilter = recdData.getString("waytitle");
+            if(wayTitleForFilter==null)wayTitleForFilter="";
+        }
 
 
 
@@ -148,11 +153,17 @@ public class MainActivity extends AppCompatActivity {
 
 		// call AsynTask to perform network operation on separate thread
         loadUrl = "http://82.207.107.126:13541/SimpleRIDE/"+"LAD"+"/SM.WebApi/api/stops?code="+myVal.substring(0, 4);
+        if(wayTitleForFilter.toLowerCase().contains("трамвай") || wayTitleForFilter.toLowerCase().contains("тролейбус")){
+            Log.d("wayTitleForFilter",wayTitleForFilter);
+            loadUrl = "http://82.207.107.126:13541/SimpleRIDE/"+"LET"+"/SM.WebApi/api/stops?code="+myVal.substring(0, 4);;
+        }
         findViewById(R.id.loading).setVisibility(View.VISIBLE);
         Log.d("LoadURL onStart : ", loadUrl);
         new HttpAsyncTask().execute(loadUrl);
 
 	}
+    //http://82.207.107.126:13541/SimpleRIDE/LET/SM.WebApi/api/stops?code=0524
+    //http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/stops?code=0524
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -233,60 +244,6 @@ public class MainActivity extends AppCompatActivity {
        }
     }
 
-    public String parseJsonToStr(String receivedStr){
-        String result = "";
-
-        receivedStr = receivedStr.replace("\"[", "[");
-        receivedStr = receivedStr.replace("]\"", "]");
-        receivedStr = receivedStr.replace("\\\\\\\"", "*");
-        receivedStr = receivedStr.replace("\\", "");
-
-        try
-        {
-            JSONArray cast = new JSONArray(receivedStr);
-            for (int i=0; i<cast.length(); i++) {
-                JSONObject jObject = cast.getJSONObject(i);
-                result += jObject.getString("RouteName").replace("ЛАД А", "")+ "_";
-                result += "("+String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint"))/60)+" хв)_";
-                result += jObject.getString("VehicleName");
-                result += "\n\n";
-            }
-        }catch (JSONException e)
-        {
-
-        }
-
-        return result+receivedStr;
-    }
-
-    public String [] parseJsonToStrArray(String receivedStr){
-        ArrayList<String> result = new ArrayList<String>();
-
-
-        receivedStr = receivedStr.replace("\"[", "[");
-        receivedStr = receivedStr.replace("]\"", "]");
-        receivedStr = receivedStr.replace("\\\\\\\"", "*");
-        receivedStr = receivedStr.replace("\\", "");
-        try
-        {
-            //JSONObject jObject = new JSONObject(receivedStr);
-            JSONArray cast = new JSONArray(receivedStr);
-            for (int i=0; i<cast.length(); i++) {
-                JSONObject jObject = cast.getJSONObject(i);
-                String itemRes = "";
-                itemRes += jObject.getString("RouteName").replace("ЛАД А", "")+ "_";
-                itemRes += "("+String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint"))/60)+" хв)_";
-                itemRes += jObject.getString("VehicleName");
-//                itemRes += "\n\n";
-                result.add(itemRes);
-            }
-        }catch (JSONException e)
-        {
-            //
-        }
-
-        return result.toArray(new String[result.size()]);
-    }
 
     public ArrayList<SceduleItem> parseJsonToSceduleAdapter(String receivedStr){
         ArrayList<SceduleItem> items = new ArrayList<SceduleItem>();
@@ -302,11 +259,28 @@ public class MainActivity extends AppCompatActivity {
             for (int i=0; i<cast.length(); i++) {
                 JSONObject jObject = cast.getJSONObject(i);
                 // String waynumber, String time, String waytitle, String busnumber
+
+                String wayTitleForBusFilter = "";
+                if(wayTitleForFilter!=null && wayTitleForFilter.length()>3){
+                    wayTitleForBusFilter = wayTitleForFilter.substring(0, 3).replace("А", "").replace("Н", "");
+                    Log.d("wayTitleForFilter",wayTitleForBusFilter);
+                }
+
+
+                String routeTitle = jObject.getString("RouteName").replace("ЛАД А", "");
+                if(wayTitleForBusFilter!=null && wayTitleForBusFilter.length()==2 && !routeTitle.toLowerCase().contains(wayTitleForBusFilter.toLowerCase()))
+                    continue;
+
+                if(routeTitle.toLowerCase().contains("трамвай") || routeTitle.toLowerCase().contains("тролейбус")){
+                    if(wayTitleForFilter!=null && !routeTitle.toLowerCase().contains(wayTitleForFilter.toLowerCase()))
+                        continue;
+                }
+
                 items.add(new SceduleItem(
-                    "",
-                    String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint"))/60)+" хв",
-                    jObject.getString("RouteName").replace("ЛАД А", ""),
-                    jObject.getString("VehicleName")
+                        "",
+                        String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint")) / 60) + " хв",
+                        routeTitle,
+                        jObject.getString("VehicleName")
                 ));
 
 //                itemRes += jObject.getString("Name");

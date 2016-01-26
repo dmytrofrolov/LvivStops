@@ -87,7 +87,8 @@ public class SavedStopsActivity extends AppCompatActivity {
 
         for (String str:catnames
              ) {
-            stopItemArrayList.add(new StopItem(str.substring(5),str.substring(0,5)));
+            if(str.length() > 6)
+                stopItemArrayList.add(new StopItem(str.substring(5),str.substring(0,5)));
         }
 
         stopsList = (ListView) findViewById(R.id.listView2);
