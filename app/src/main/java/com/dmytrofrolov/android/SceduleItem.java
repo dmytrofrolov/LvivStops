@@ -8,12 +8,18 @@ public class SceduleItem {
     private String time;
     private String waytitle;
     private String busnumber;
+    private String x_coord;
+    private String y_coord;
+    private String state;
 
-    public SceduleItem(String waynumber, String time, String waytitle, String busnumber) {
+    public SceduleItem(String waynumber, String time, String waytitle, String busnumber, String x_coord, String y_coord, String state) {
         this.waynumber = waynumber;
         this.time = time;
         this.waytitle = waytitle;
         this.busnumber = busnumber;
+        this.x_coord = x_coord;
+        this.y_coord = y_coord;
+        this.state = state;
     }
 
     public String getWaynumber() {
@@ -48,4 +54,15 @@ public class SceduleItem {
         this.busnumber = busnumber;
     }
 
+    public String getX_coord() {return x_coord;}
+
+    public void setX_coord(String x_coord) {this.x_coord = x_coord;}
+
+    public String getY_coord() {return y_coord;}
+
+    public void setY_coord(String y_coord) {this.y_coord = y_coord;}
+
+    public String getState() {return state;}
+
+    public void setState(String state) {this.state = state;}
 }

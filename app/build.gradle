@@ -5,7 +5,7 @@ android {
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId 'com.dmytrofrolov.lvivstops'
-        minSdkVersion 8
+        minSdkVersion 12
         targetSdkVersion 17
     }
     buildTypes {
@@ -20,4 +20,5 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.google.android.gms:play-services:8.3.0'
 }

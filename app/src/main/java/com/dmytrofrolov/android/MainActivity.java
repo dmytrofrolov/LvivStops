@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -26,14 +26,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.Activity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -133,6 +130,26 @@ public class MainActivity extends AppCompatActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
+
+
+        ListView listViewScedule = (ListView) findViewById(R.id.listViewScedule);
+        listViewScedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
+                                    long id) {
+                SceduleItem sceduleItem = (SceduleItem) parent.getItemAtPosition(position);
+                String x_coord = sceduleItem.getX_coord();
+                String y_coord = sceduleItem.getY_coord();
+                Intent appInfo = new Intent(MainActivity.this, MapXYActivity.class);
+//                StopItem temp = (StopItem) parent.getItemAtPosition(position);
+                appInfo.putExtra("x_coord", x_coord);
+                appInfo.putExtra("y_coord", y_coord);
+                appInfo.putExtra("title", sceduleItem.getWaynumber());
+                startActivity(appInfo);
+
+            }
+        });
+
 //			tvIsConnected.setBackgroundColor(0xFF00CC00);
 //			tvIsConnected.setText("You are connected");
 //        }
@@ -276,12 +293,16 @@ public class MainActivity extends AppCompatActivity {
                         continue;
                 }
 
+                String x_coord = jObject.getString("X");
+                String y_coord = jObject.getString("Y");
+                String state = jObject.getString("State");
+
                 items.add(new SceduleItem(
                         "",
                         String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint")) / 60) + " хв",
                         routeTitle,
-                        jObject.getString("VehicleName")
-                ));
+                        jObject.getString("VehicleName"),
+                        x_coord, y_coord, state));
 
 //                itemRes += jObject.getString("Name");
 //                result.add(itemRes);

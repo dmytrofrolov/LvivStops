@@ -41,12 +41,19 @@ public class SceduleAdapter extends ArrayAdapter<SceduleItem> {
         TextView time = (TextView) rowView.findViewById(R.id.time);
         TextView waytitle = (TextView) rowView.findViewById(R.id.waytitle);
         TextView busnumber = (TextView) rowView.findViewById(R.id.busnumber);
+        TextView state = (TextView) rowView.findViewById(R.id.state);
+
 
         // 4. Set the text for textView
         waynumber.setText(itemsArrayList.get(position).getWaynumber());
         time.setText(itemsArrayList.get(position).getTime());
         waytitle.setText(itemsArrayList.get(position).getWaytitle());
         busnumber.setText(itemsArrayList.get(position).getBusnumber());
+        if(itemsArrayList.get(position).getState()=="0") {
+            state.setText("Імовірно не на маршруті!");
+        }else{
+            state.setText("");
+        }
 
         // 5. retrn rowView
         return rowView;
