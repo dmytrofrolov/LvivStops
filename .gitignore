@@ -14,3 +14,6 @@ urls.xml
 *.swp
 
 
+/app/build/generated/
+/.gradle/
+/app/build/intermediates/

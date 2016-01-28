@@ -9,6 +9,10 @@ package com.dmytrofrolov.android;
 
 public final class Manifest {
     public static final class permission {
+        /**  <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" /> 
+ <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
+ <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
+         */
         public static final String MAPS_RECEIVE="com.dmytrofrolov.android.permission.MAPS_RECEIVE";
     }
 }
