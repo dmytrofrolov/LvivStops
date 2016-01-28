@@ -124,8 +124,6 @@ public class MainScreenActivity extends AppCompatActivity {
         String query="";
         try{query = URLEncoder.encode(getDeviceName(), "utf-8");}catch (UnsupportedEncodingException e){}
         new HttpAsyncTask().execute(getResources().getString(R.string.uds)+query);
-        Log.d("urls",getResources().getString(R.string.uds));
-
     }
 
     @Override

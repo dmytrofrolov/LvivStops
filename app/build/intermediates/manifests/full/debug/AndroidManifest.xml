@@ -60,7 +60,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCQryLkszcGV30VnP4P7s0TROp_DiscEqU" />
+            android:value="AIzaSyAc-OmDkET_8CrpbOFRhauyLI_bP8p_A4A" />
 
         <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
         <activity
@@ -100,4 +100,4 @@
             android:exported="false" />
     </application>
 
-</manifest>
+</manifest> <!-- android:value="AIzaSyCQryLkszcGV30VnP4P7s0TROp_DiscEqU" // release -->

@@ -100,4 +100,5 @@
             android:exported="false" />
     </application>
 
-</manifest>
+</manifest> <!-- android:value="AIzaSyAc-OmDkET_8CrpbOFRhauyLI_bP8p_A4A" // debug -->
+<!-- android:value="AIzaSyCQryLkszcGV30VnP4P7s0TROp_DiscEqU" // release -->

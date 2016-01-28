@@ -132,23 +132,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        ListView listViewScedule = (ListView) findViewById(R.id.listViewScedule);
-        listViewScedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
-                                    long id) {
-                SceduleItem sceduleItem = (SceduleItem) parent.getItemAtPosition(position);
-                String x_coord = sceduleItem.getX_coord();
-                String y_coord = sceduleItem.getY_coord();
-                Intent appInfo = new Intent(MainActivity.this, MapXYActivity.class);
-//                StopItem temp = (StopItem) parent.getItemAtPosition(position);
-                appInfo.putExtra("x_coord", x_coord);
-                appInfo.putExtra("y_coord", y_coord);
-                appInfo.putExtra("title", sceduleItem.getWaynumber());
-                startActivity(appInfo);
-
-            }
-        });
+//        ListView listViewScedule = (ListView) findViewById(R.id.listViewScedule);
+//        listViewScedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View itemClicked, int position,
+//                                    long id) {
+//                SceduleItem sceduleItem = (SceduleItem) parent.getItemAtPosition(position);
+//                String x_coord = sceduleItem.getX_coord();
+//                String y_coord = sceduleItem.getY_coord();
+//                Intent appInfo = new Intent(MainActivity.this, MapXYActivity.class);
+////                StopItem temp = (StopItem) parent.getItemAtPosition(position);
+//                appInfo.putExtra("x_coord", x_coord);
+//                appInfo.putExtra("y_coord", y_coord);
+//                appInfo.putExtra("title", sceduleItem.getWaynumber());
+//                startActivity(appInfo);
+//
+//            }
+//        });
 
 //			tvIsConnected.setBackgroundColor(0xFF00CC00);
 //			tvIsConnected.setText("You are connected");

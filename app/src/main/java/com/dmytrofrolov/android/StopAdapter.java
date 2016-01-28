@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -124,8 +125,21 @@ public class StopAdapter extends ArrayAdapter<StopItem> {
         addBtn.setFocusable(false);
 
         if( isShowButton == false ){
-            addBtn.setEnabled(false);
-            addBtn.setVisibility(View.INVISIBLE);
+//            addBtn.setEnabled(false);
+//            addBtn.setVisibility(View.INVISIBLE);
+            addBtn.setText("M");
+            addBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LinearLayout rl = (LinearLayout) v.getParent();
+                    TextView transportCode = (TextView) rl.findViewById(R.id.value);
+                    TextView transportTitle = (TextView) rl.findViewById(R.id.label);
+                    Intent appInfo = new Intent(v.getContext(), MapXYActivity.class);
+                    appInfo.putExtra("transportCode", transportCode.getText());
+                    appInfo.putExtra("transportTitle", transportTitle.getText());
+                    context.startActivity(appInfo);
+                }
+            });
         }
 
         // 5. retrn rowView

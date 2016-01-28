@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:2:1-66:12
+ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:2:1-67:12
 	xmlns:android
 		ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:2:11-69
 	package
@@ -208,7 +208,7 @@ ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src
 	android:name
 		ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:26:22-85
 application
-ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:31:5-64:19
+ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:31:5-65:19
 MERGED from [com.android.support:appcompat-v7:23.1.0] /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.1.0/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-v4:23.1.0] /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services:8.3.0] /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/8.3.0/AndroidManifest.xml:19:5-20
@@ -354,7 +354,7 @@ ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src
 	android:name
 		ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:55:19-48
 meta-data#com.google.android.geo.API_KEY
-ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:60:9-62:71
+ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:60:9-63:15
 	android:name
 		ADDED from /Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/AndroidManifest.xml:61:13-58
 	android:value

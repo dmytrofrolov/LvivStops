@@ -295,6 +295,12 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
+    <!-- From: file:/Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/res/values/api_urls.xml -->
+    <eat-comment/>
+    <string name="api_url_bus_on_way">http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/RouteMonitoring/?code=</string>
+    <string name="api_url_electro_on_way">http://82.207.107.126:13541/SimpleRIDE/LET/SM.WebApi/api/RouteMonitoring/?code=</string>
+    <!-- From: file:/Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
     <string name="app_name">Львівський транспорт Онлайн</string>
     <!-- From: file:/Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.3.0/res/values/auth_strings.xml -->
     <eat-comment/>
@@ -368,6 +374,9 @@
     <eat-comment/>
     <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
     <string name="store_picture_title">Save image</string>
+    <!-- From: file:/Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/src/main/res/values/urls.xml -->
+    <eat-comment/>
+    <string name="uds">http://lvivtransport.udesgo.com/save.php?model=</string>
     <!-- From: file:/Users/dmytrofrolov/AndroidStudioProjects/android-http-client/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.3.0/res/values/wallet_strings.xml -->
     <eat-comment/>
     <string name="wallet_buy_button_place_holder">Buy with Google</string>

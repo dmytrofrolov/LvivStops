@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_url_electro_on_way">http://82.207.107.126:13541/SimpleRIDE/LET/SM.WebApi/api/RouteMonitoring/?code=</string>
+    <string name="api_url_bus_on_way">http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/RouteMonitoring/?code=</string>
+
+</resources>
