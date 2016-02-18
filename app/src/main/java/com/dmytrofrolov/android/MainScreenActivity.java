@@ -55,6 +55,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+
 public class MainScreenActivity extends AppCompatActivity {
 
     @Override
@@ -66,6 +70,10 @@ public class MainScreenActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         setTitle("Львівський транспорт. Онлайн.");
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // Search by stop button
         Button search_by_stop_button = (Button) findViewById(R.id.search_by_stops);

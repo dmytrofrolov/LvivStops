@@ -8,6 +8,11 @@ package com.dmytrofrolov.android;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -44,23 +49,36 @@ public class MapXYActivity extends Activity implements OnMapReadyCallback {
     private String x_coord;
     private String y_coord;
     private String transportTitle;
+    private String transportId;
     private String transportCode;
     private String urls;
     private GoogleMap gMap = null;
     private boolean isFirstStart = true;
 
     private class PointItem{
-        PointItem(String x_coord, String y_coord, String title, int state){
+        PointItem(String x_coord, String y_coord, String title, int state, float angle){
             this.x_coord = x_coord;
             this.y_coord = y_coord;
             this.title = title;
             this.state = state;
+//            this.angle = angle - 45.0f + 4.0f; // 180 for range (0-360) 45 for image, 2 for diff
+            this.angle = angle;
+            if (this.angle > 360f)this.angle=360.0f-this.angle;
+            if (this.angle < 0.0f)
+            {
+                this.angle = -this.angle;
+            };
+
+            this.angle+=90.0f;
+
+            if (this.angle > 360f)this.angle-=360.0f;
         }
 
         public String x_coord;
         public String y_coord;
         public String title;
         public int state;
+        public float angle;
     }
 
     private Vector<PointItem> points;
@@ -77,6 +95,9 @@ public class MapXYActivity extends Activity implements OnMapReadyCallback {
         transportTitle = recdData.getString("transportTitle");
         if(transportCode==null)transportCode="";
 
+        transportId = recdData.getString("transportId");
+        if(transportId==null)transportId="";
+
         Button addBtn = (Button) findViewById(R.id.button);
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +107,14 @@ public class MapXYActivity extends Activity implements OnMapReadyCallback {
         });
 
         urls = getResources().getString(R.string.api_url_bus_on_way);
+        boolean isElectro = false;
         if(transportTitle.toLowerCase().contains("трамвай") || transportTitle.toLowerCase().contains("тролейбус")){
             urls = getResources().getString(R.string.api_url_electro_on_way);
+            isElectro = true;
+        }
+        if( !transportCode.contains("C1") && !transportCode.contains("C2")){
+            if(isElectro)transportCode = "C1|"+transportCode;
+            else transportCode = "C2|"+transportCode;
         }
         urls += transportCode;
 
@@ -124,6 +151,7 @@ public class MapXYActivity extends Activity implements OnMapReadyCallback {
     public static String GET(String url){
         InputStream inputStream = null;
         String result = "";
+//        Log.d("URLS:",url);
         url = url.replace("|","%7C");
         try {
 
@@ -179,15 +207,45 @@ public class MapXYActivity extends Activity implements OnMapReadyCallback {
                 LatLng currentBus = new LatLng(Double.parseDouble(points.get(i).y_coord),Double.parseDouble(points.get(i).x_coord));
 
                 BitmapDescriptor icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-                if(points.get(i).state==0)
+                if(points.get(i).state==0){
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+                }
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.gps_arrow);
 
-                gMap.addMarker(new MarkerOptions()
+                // add from http://stackoverflow.com/questions/14811579/how-to-create-android-map-api-v2-custom-marker-with-imageview
+//                Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+//                Bitmap bmp = Bitmap.createBitmap(30, 30, conf);
+//                Canvas canvas1 = new Canvas(bmp);
+//
+//                // paint defines the text color,
+//                // stroke width, size
+//                Paint color = new Paint();
+//                color.setTextSize(35);
+//                color.setColor(Color.BLACK);
+//
+//                //modify canvas
+//                canvas1.drawBitmap(BitmapFactory.decodeResource(getResources(),
+//                        R.drawable.map_arrow), 0,0, color);
+//                canvas1.drawText(transportTitle, 30, 40, color);
+//
+//                icon = BitmapDescriptorFactory.fromBitmap(bmp);
+                // end add
+
+                float angle = points.get(i).angle;
+
+                Marker marker = gMap.addMarker(new MarkerOptions()
                         .title(points.get(i).title)
-                        .snippet(transportTitle)
+                        .snippet(transportTitle) //  + String.valueOf(angle)
                         .icon(icon)
+                        .rotation(angle)
+                        .anchor(0.5f, 0.5f)
+                        .infoWindowAnchor(0.5f, 0.5f)
                         .position(currentBus));
+
                 builder.include(currentBus);
+
+//                Log.d("transportId",points.get(i).title);
+                if(transportId.equals(points.get(i).title))marker.showInfoWindow();
             }
             if ( points.size() > 0 && isFirstStart){
                 LatLngBounds bounds = builder.build();
@@ -219,12 +277,14 @@ public class MapXYActivity extends Activity implements OnMapReadyCallback {
                     continue;
 
                 int state = Integer.parseInt(jObject.getString("State"));
+                float angle = Float.parseFloat(jObject.getString("Angle"));
 
                 points.add(new PointItem(
                         jObject.getString("X"),
                         jObject.getString("Y"),
                         jObject.getString("VehicleName"),
-                        state
+                        state,
+                        angle
                 ));
 
 //                if(itemRes.length()>5)continue;

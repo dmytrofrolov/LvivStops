@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dmytrofrolov.lvivstops"
-    android:versionCode="10"
-    android:versionName="0.10" >
+    android:versionCode="11"
+    android:versionName="0.11" >
 
     <uses-sdk
         android:minSdkVersion="12"
@@ -45,20 +45,28 @@
             android:name="com.dmytrofrolov.android.MainActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity android:name="com.dmytrofrolov.android.SearchActivity" >
+        <activity
+            android:name="com.dmytrofrolov.android.SearchActivity"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
-        <activity android:name="com.dmytrofrolov.android.SavedStopsActivity" >
+        <activity
+            android:name="com.dmytrofrolov.android.SavedStopsActivity"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
-        <activity android:name="com.dmytrofrolov.android.TransportScreenActivity" >
+        <activity
+            android:name="com.dmytrofrolov.android.TransportScreenActivity"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
-        <activity android:name="com.dmytrofrolov.android.OneTransportStopListActivity" >
+        <activity
+            android:name="com.dmytrofrolov.android.OneTransportStopListActivity"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity android:name="com.dmytrofrolov.android.MapXYActivity" >
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAc-OmDkET_8CrpbOFRhauyLI_bP8p_A4A" />
+            android:value="AIzaSyCQryLkszcGV30VnP4P7s0TROp_DiscEqU" />
 
         <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
         <activity

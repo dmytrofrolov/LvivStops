@@ -296,13 +296,16 @@ public class MainActivity extends AppCompatActivity {
                 String x_coord = jObject.getString("X");
                 String y_coord = jObject.getString("Y");
                 String state = jObject.getString("State");
+                String RouteCode = jObject.getString("RouteCode");
 
                 items.add(new SceduleItem(
                         "",
                         String.valueOf(Integer.parseInt(jObject.getString("TimeToPoint")) / 60) + " хв",
                         routeTitle,
                         jObject.getString("VehicleName"),
-                        x_coord, y_coord, state));
+                        x_coord, y_coord, state,
+                        RouteCode
+                        ));
 
 //                itemRes += jObject.getString("Name");
 //                result.add(itemRes);

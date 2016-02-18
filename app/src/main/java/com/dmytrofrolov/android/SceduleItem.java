@@ -11,8 +11,10 @@ public class SceduleItem {
     private String x_coord;
     private String y_coord;
     private String state;
+    private String routeCode;
 
-    public SceduleItem(String waynumber, String time, String waytitle, String busnumber, String x_coord, String y_coord, String state) {
+
+    public SceduleItem(String waynumber, String time, String waytitle, String busnumber, String x_coord, String y_coord, String state, String routeCode) {
         this.waynumber = waynumber;
         this.time = time;
         this.waytitle = waytitle;
@@ -20,6 +22,7 @@ public class SceduleItem {
         this.x_coord = x_coord;
         this.y_coord = y_coord;
         this.state = state;
+        this.routeCode = routeCode;
     }
 
     public String getWaynumber() {
@@ -65,4 +68,12 @@ public class SceduleItem {
     public String getState() {return state;}
 
     public void setState(String state) {this.state = state;}
+
+    public String getRouteCode() {
+        return routeCode;
+    }
+
+    public void setRouteCode(String routeCode) {
+        this.routeCode = routeCode;
+    }
 }
